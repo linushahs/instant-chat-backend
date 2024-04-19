@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
-import { GoogleAuthGuard } from "./guard/google.guard";
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { GoogleAuthGuard } from "./guard/google.guard";
+import { Request } from "express";
 
 @Controller("auth")
 export class AuthController {
@@ -8,27 +9,22 @@ export class AuthController {
 
     @Get("google/login")
     @UseGuards(GoogleAuthGuard)
-    signinWithGoogle() {
-        return "Success"
-    }
+    signinWithGoogle() { }
 
     @Get("google/callback")
     @UseGuards(GoogleAuthGuard)
-    handleGoogleCallback() {
-        console.log("returned to google callback");
-        return "asd";
+    handleGoogleCallback(@Req() req: Request) {
+        // console.log(req.user);
+        return req.user;
     }
 
     @Get("github/login")
     @UseGuards(AuthGuard('github'))
-    signinWithGithub() {
-        return "Success"
-    }
+    signinWithGithub() { }
 
     @Get("github/callback")
     @UseGuards(AuthGuard('github'))
-    handleGithubCallback() {
-        console.log("returned to github callback");
-        return "asd";
+    handleGithubCallback(@Req() req: Request) {
+        return req.user;
     }
 }
