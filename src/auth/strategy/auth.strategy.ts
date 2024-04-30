@@ -16,9 +16,9 @@ export class GithubAuthStrategy extends PassportStrategy(GithubStrategy, 'github
         });
     }
 
-    async validate(accessToken: string, _refreshToken: string, profile: Profile) {
+    async validate(accessToken: string, refreshToken: string, profile: Profile) {
         const userEmail = await this.authService.fetchUserEmail(accessToken);
-        const user = await this.authService.validateUser({
+        const user = await this.authService.createUser({
             email: userEmail,
             fullname: profile.displayName,
             picture: profile.photos[0].value
@@ -30,7 +30,7 @@ export class GithubAuthStrategy extends PassportStrategy(GithubStrategy, 'github
             providerAccountId: String((profile._json as any).id)
         });
 
-        return { accessToken, _refreshToken, data: user };
+        return { accessToken, refreshToken, data: user };
     }
 
 }
@@ -46,8 +46,15 @@ export class GoogleAuthStrategy extends PassportStrategy(GoogleStrategy, 'google
         })
     }
 
+    authorizationParams(): { [key: string]: string } {
+        return {
+            access_type: 'offline',
+            prompt: 'consent',
+        };
+    }
+
     async validate(accessToken: string, refreshToken: string, profile: GoogleProfile) {
-        const user = await this.authService.validateUser({
+        const user = await this.authService.createUser({
             email: profile._json.email,
             fullname: profile._json.name,
             picture: profile._json.picture,
@@ -58,7 +65,6 @@ export class GoogleAuthStrategy extends PassportStrategy(GoogleStrategy, 'google
             provider: profile.provider,
             providerAccountId: profile.id
         });
-
 
         return { accessToken, refreshToken, data: user }
     }

@@ -7,9 +7,15 @@ import { PassportModule } from '@nestjs/passport';
 import { MessagesModule } from './messages/messages.module';
 import { ConvesationsModule } from './conversations/conversations.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ConfigModule } from '@nestjs/config';
+
+require('dotenv').config();
 
 @Module({
   imports: [JwtModule, AuthModule, UserModule, PrismaModule,
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     PassportModule.register({ session: true }),
     MessagesModule, ConvesationsModule, EventEmitterModule.forRoot({
       newListener: true,
