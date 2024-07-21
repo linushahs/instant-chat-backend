@@ -4,10 +4,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { MessagesModule } from './messages/messages.module';
+import { MessagesModule } from './conversations/messages/messages.module';
 import { ConvesationsModule } from './conversations/conversations.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConfigModule } from '@nestjs/config';
+import { VideoAudioModule } from './video-audio/video-audio.module';
 
 require('dotenv').config();
 
@@ -21,6 +22,6 @@ require('dotenv').config();
       newListener: true,
       removeListener: true,
       wildcard: true,
-    })],
+    }), VideoAudioModule],
 })
 export class AppModule { }

@@ -44,6 +44,6 @@ export class AuthController {
             throw new UnauthorizedException("No user found")
         }
 
-        return res.send({ status: "success", message: "Fetched user profile successfully", data: user })
+        return res.send({ message: "Fetched user profile successfully", user })
     }
 }

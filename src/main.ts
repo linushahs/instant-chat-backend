@@ -11,7 +11,7 @@ async function bootstrap() {
 
   // Configure CORS settings
   app.enableCors({
-    origin: "http://localhost:5173",
+    origin: ["http:192.168.1.9:5173", "http://localhost:5173"],
     credentials: true,
   });
 
@@ -36,7 +36,7 @@ async function bootstrap() {
     }));
   app.use(passport.initialize());
   app.use(passport.session());
-  await app.listen(3000);
+  await app.listen(3000, "0.0.0.0");
 }
 
 bootstrap();

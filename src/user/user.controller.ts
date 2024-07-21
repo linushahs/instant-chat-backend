@@ -1,14 +1,16 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { Request } from "express";
+import { Controller, Get, Request, Res } from "@nestjs/common";
+import { Response } from "express";
+import { UserService } from "./user.service";
 
-@UseGuards(AuthGuard('jwt'))
 @Controller("users")
 export class UserController {
-    constructor() { }
+    constructor(private userSerivce: UserService) { }
 
-    @Get("me")
-    getUserDetails(@Req() req: Request) {
-        return req.user;
+    @Get()
+    async getListOfUsers(@Request() req, @Res() res: Response) {
+        const userId = req.cookies["userId"];
+        const users = await this.userSerivce.getListOfUsers(userId);
+
+        return res.send({ message: "Fetched list of users successfully", users });
     }
 }
