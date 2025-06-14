@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { MessagesModule } from './conversations/messages/messages.module';
-import { ConvesationsModule } from './conversations/conversations.module';
+import { ConversationsModule } from './conversations/conversations.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConfigModule } from '@nestjs/config';
 import { VideoAudioModule } from './video-audio/video-audio.module';
@@ -18,7 +18,7 @@ require('dotenv').config();
       isGlobal: true
     }),
     PassportModule.register({ session: true }),
-    MessagesModule, ConvesationsModule, EventEmitterModule.forRoot({
+    MessagesModule, ConversationsModule, EventEmitterModule.forRoot({
       newListener: true,
       removeListener: true,
       wildcard: true,

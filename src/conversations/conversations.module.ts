@@ -5,4 +5,4 @@ import { ConversationsGateway } from './conversations.gateway';
 @Module({
     providers: [ConversationsGateway, ConversationsService],
 })
-export class ConvesationsModule { }
+export class ConversationsModule { }

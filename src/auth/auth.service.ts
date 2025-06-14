@@ -4,24 +4,31 @@ import axios from "axios";
 import { Response } from "express";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ReqUser } from "./types/auth.types";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService, private configService: ConfigService) { }
+    constructor(private prisma: PrismaService, private configService: ConfigService, private jwtService: JwtService) { }
+
+    async generateRefreshToken(userId: string) {
+        const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: '7d' });
+
+        return refreshToken;
+    }
+
+    async getTokenPair(user: ReqUser["data"]) {
+        const payload = { email: user.email, sub: user.id };
+        return {
+            access_token: this.jwtService.sign(payload),
+            refresh_token: await this.generateRefreshToken(user.id),
+        };
+    }
 
     async handleAuthCallback(@Request() req: { user: ReqUser }, res: Response, provider: string) {
-        if (!req.user) {
-            return res.redirect(this.configService.get<string>('CLIENT_LOGIN_URL'));
-        }
+        const user = req.user;
+        const jwt = await this.getTokenPair(user.data);
 
-        res.cookie('userId', req.user.data.id);
-        res.cookie('provider', provider);
-        res.cookie('access_token', req.user.accessToken, { httpOnly: true });
-        res.cookie('refresh_token', req.user.refreshToken, {
-            httpOnly: true,
-        });
-
-        return res.redirect(this.configService.get('CLIENT_LOGIN_SUCCESS_URL'));
+        return res.send({ "message": "Logged in successfully", data: jwt });
     }
 
     async getNewAccessToken(refreshToken: string): Promise<string> {
