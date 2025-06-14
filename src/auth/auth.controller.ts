@@ -1,4 +1,4 @@
-import { Controller, Get, Request, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Controller, Get, Request, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 import { AuthService } from "./auth.service";
@@ -36,14 +36,9 @@ export class AuthController {
         return res.send({ message: "Logout success" })
     }
 
-    @Get('profile')
-    async handleGetProfile(@Request() req, @Res() res: Response) {
-        const user = await this.authService.getProfile(req, res)
+   @Post('refresh-token')
+   refreshToken(body: {refresh_token: string}) {
+       return this.authService.getTokenPair(body.refresh_token);
 
-        if (!user) {
-            throw new UnauthorizedException("No user found")
-        }
-
-        return res.send({ message: "Fetched user profile successfully", user })
-    }
+   }
 }
