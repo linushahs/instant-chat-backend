@@ -35,10 +35,4 @@ export class AuthController {
 
         return res.send({ message: "Logout success" })
     }
-
-   @Post('refresh-token')
-   refreshToken(body: {refresh_token: string}) {
-       return this.authService.getTokenPair(body.refresh_token);
-
-   }
 }
