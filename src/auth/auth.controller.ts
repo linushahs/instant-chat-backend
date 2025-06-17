@@ -3,11 +3,16 @@ import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 import { AuthService } from "./auth.service";
 import { GoogleAuthGuard } from "./guard/google.guard";
-import { clearAllCookies } from "./helpers/helpers";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get("profile")
+  @UseGuards(AuthGuard("jwt"))
+  getProfile(@Request() req, @Res() res: Response) {
+    return this.authService.getProfile(req, res);
+  }
 
   @Get("google/login")
   @UseGuards(GoogleAuthGuard)
@@ -27,12 +32,5 @@ export class AuthController {
   @UseGuards(AuthGuard("github"))
   handleGithubCallback(@Request() req, @Res() res: Response) {
     return this.authService.handleAuthCallback(req, res);
-  }
-
-  @Get("logout")
-  logout(@Res() res: Response) {
-    clearAllCookies(res);
-
-    return res.send({ message: "Logout success" });
   }
 }

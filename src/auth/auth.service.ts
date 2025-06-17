@@ -39,8 +39,21 @@ export class AuthService {
   async handleAuthCallback(@Request() req: { user: ReqUser }, res: Response) {
     const user = req.user;
     const jwt = await this.getTokenPair(user.data);
+    const clientUrl = this.configService.get<string>(
+      "CLIENT_LOGIN_SUCCESS_URL",
+    );
 
-    return res.send({ message: "Logged in successfully", data: jwt });
+    if (!clientUrl) {
+      throw new Error(
+        "CLIENT_LOGIN_SUCCESS_URL is not defined in environment variables",
+      );
+    }
+
+    const redirectUrl = new URL(clientUrl);
+    redirectUrl.searchParams.append("access_token", jwt.access_token);
+    redirectUrl.searchParams.append("refresh_token", jwt.refresh_token);
+
+    return res.redirect(redirectUrl.toString());
   }
 
   async getNewAccessToken(refreshToken: string): Promise<string> {
