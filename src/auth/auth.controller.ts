@@ -7,32 +7,32 @@ import { clearAllCookies } from "./helpers/helpers";
 
 @Controller("auth")
 export class AuthController {
-    constructor(private authService: AuthService,) { }
+  constructor(private authService: AuthService) {}
 
-    @Get("google/login")
-    @UseGuards(GoogleAuthGuard)
-    signinWithGoogle() { }
+  @Get("google/login")
+  @UseGuards(GoogleAuthGuard)
+  signinWithGoogle() {}
 
-    @Get("google/callback")
-    @UseGuards(GoogleAuthGuard)
-    async handleGoogleCallback(@Request() req, @Res() res: Response) {
-        return this.authService.handleAuthCallback(req, res, 'google');
-    }
+  @Get("google/callback")
+  @UseGuards(GoogleAuthGuard)
+  async handleGoogleCallback(@Request() req, @Res() res: Response) {
+    return this.authService.handleAuthCallback(req, res);
+  }
 
-    @Get("github/login")
-    @UseGuards(AuthGuard('github'))
-    signinWithGithub() { }
+  @Get("github/login")
+  @UseGuards(AuthGuard("github"))
+  signinWithGithub() {}
 
-    @Get("github/callback")
-    @UseGuards(AuthGuard('github'))
-    handleGithubCallback(@Request() req, @Res() res: Response) {
-        return this.authService.handleAuthCallback(req, res, 'github');
-    }
+  @Get("github/callback")
+  @UseGuards(AuthGuard("github"))
+  handleGithubCallback(@Request() req, @Res() res: Response) {
+    return this.authService.handleAuthCallback(req, res);
+  }
 
-    @Get('logout')
-    logout(@Res() res: Response) {
-        clearAllCookies(res);
+  @Get("logout")
+  logout(@Res() res: Response) {
+    clearAllCookies(res);
 
-        return res.send({ message: "Logout success" })
-    }
+    return res.send({ message: "Logout success" });
+  }
 }

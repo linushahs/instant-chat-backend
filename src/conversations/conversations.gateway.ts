@@ -1,12 +1,16 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+} from "@nestjs/websockets";
 
 @WebSocketGateway({ cors: true })
 export class ConversationsGateway {
-    constructor() {}
+  constructor() {}
 
-    @SubscribeMessage('createConversation')
-    createConversation(@MessageBody() data) {
-        console.log(data);
-        return data;
-    }
+  @SubscribeMessage("createConversation")
+  createConversation(@MessageBody() data) {
+    console.log(data);
+    return data;
+  }
 }
